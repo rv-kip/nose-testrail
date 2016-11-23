@@ -63,12 +63,12 @@ class NoseTestRail(Plugin):
             return
         else:
             self.testrail = {}
-            self.testrail.host = os.environ.get('TESTRAIL_HOST', None)
-            self.testrail.user = os.environ.get('TESTRAIL_USERNAME', None)
-            self.testrail.password = os.environ.get('TESTRAIL_PASSWORD', None)
-            self.testrail.run_id = os.environ.get('TESTRAIL_RUN_ID', None)
-            self.testrail.mapping_file = os.environ.get('TESTRAIL_MAPPING_FILE', None)
-            self.testrail.mapping_only = os.environ.get('TESTRAIL_MAPPING_ONLY', None)
+            self.testrail['host'] = os.environ.get('TESTRAIL_HOST', None)
+            self.testrail['user'] = os.environ.get('TESTRAIL_USERNAME', None)
+            self.testrail['password'] = os.environ.get('TESTRAIL_PASSWORD', None)
+            self.testrail['run_id'] = os.environ.get('TESTRAIL_RUN_ID', None)
+            self.testrail['mapping_file'] = os.environ.get('TESTRAIL_MAPPING_FILE', None)
+            self.testrail['mapping_only'] = os.environ.get('TESTRAIL_MAPPING_ONLY', None)
 
     def begin(self):
         self.time_before = datetime.now()
@@ -86,17 +86,17 @@ class NoseTestRail(Plugin):
         test_case_id = getattr(test_method, CASE_ID)
 
         if test_case_id:
-            if self.testrail.mapping_file:
-                with io.open(self.testrail.mapping_file, 'ab') as f:
+            if self.testrail['mapping_file']:
+                with io.open(self.testrail['mapping_file'], 'ab') as f:
                     f.write('%s:%s,%d' % (test_class, test_name, test_case_id))
 
             # Check for TestRail API Requirements before going further
             if (
-                self.testrail.host and
-                self.testrail.user and
-                self.testrail.password and
-                self.testrail.run_id and
-                not self.testrail.mapping_only
+                self.testrail['host'] and
+                self.testrail['user'] and
+                self.testrail['password'] and
+                self.testrail['run_id'] and
+                not self.testrail['mapping_only']
             ):
                 time_after = datetime.now()
                 delta = time_after - self.time_before
@@ -118,8 +118,8 @@ class NoseTestRail(Plugin):
 
     def send_result(self, result):
             uri = 'https://{0}/index.php?/api/v2/add_result_for_case/{1}/{2}'.format(
-                self.testrailhost,
-                self.testrail.run_id,
+                self.testrail['host'],
+                self.testrail['run_id'],
                 self.test_case_id
             )
             self.__send_request('POST', uri, result)
@@ -129,8 +129,8 @@ class NoseTestRail(Plugin):
         if (method == 'POST'):
             request.add_data(json.dumps(data))
         auth = base64.b64encode('%s:%s' % (
-            self.testrail.user,
-            self.testrail.password,
+            self.testrail['user'],
+            self.testrail['password'],
         ))
         request.add_header('Authorization', 'Basic %s' % auth)
         request.add_header('Content-Type', 'application/json')
