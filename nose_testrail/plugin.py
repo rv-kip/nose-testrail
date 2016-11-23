@@ -52,12 +52,10 @@ class NoseTestRail(Plugin):
         self.result = {}
 
     def stopTest(self, test):
-        test_class = test.id().split('.')[-2]
-        test_name = test.id().split('.')[-1]
-        test_method = getattr(test.test, test_name)
-
         if self.test_case_id:
-            if self.testrail['mapping_file']:
+            test_class = test.id().split('.')[-2]
+            test_name = test.id().split('.')[-1]
+            if self.testrail['mapping_file'] and test_class and test_name:
                 with io.open(self.testrail['mapping_file'], 'ab') as f:
                     f.write('%s:%s,%d' % (test_class, test_name, self.test_case_id) + "\n")
 
