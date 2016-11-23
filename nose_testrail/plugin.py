@@ -62,7 +62,7 @@ class NoseTestRail(Plugin):
         if test_case_id:
             if self.testrail['mapping_file']:
                 with io.open(self.testrail['mapping_file'], 'ab') as f:
-                    f.write('%s:%s,%d' % (test_class, test_name, test_case_id))
+                    f.write('%s:%s,%d' % (test_class, test_name, test_case_id) + "\n")
 
             # Check for TestRail API Requirements before going further
             if (
