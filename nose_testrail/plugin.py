@@ -12,28 +12,6 @@ from nose.plugins import Plugin
 CASE_ID = 'case_id'
 
 
-# TODO, move inside class
-def elapsed_time(seconds, separator=' '):
-    suffixes = ['y', 'w', 'd', 'h', 'm', 's']
-    time = []
-    parts = [
-        (suffixes[0], 60 * 60 * 24 * 7 * 52),
-        (suffixes[1], 60 * 60 * 24 * 7),
-        (suffixes[2], 60 * 60 * 24),
-        (suffixes[3], 60 * 60),
-        (suffixes[4], 60),
-        (suffixes[5], 1)
-    ]
-    for suffix, length in parts:
-        value = seconds / length
-        if value > 0:
-            seconds = seconds % length
-            time.append('%s%s' % (str(value), suffix))
-        if seconds < 1:
-            break
-    return ' '.join(time)
-
-
 def case_id(id):
     """Decorator that adds test case id to a test"""
     def wrap_ob(ob):
@@ -43,12 +21,8 @@ def case_id(id):
 
 
 def testrail_case_id(id):
+    """A more clearly named decorator. Same as case_id"""
     return case_id(id)
-    # """Decorator that adds test case id to a test"""
-    # def wrap_ob(ob):
-    #     setattr(ob, CASE_ID, id)
-    #     return ob
-    # return wrap_ob
 
 
 class NoseTestRail(Plugin):
@@ -100,7 +74,7 @@ class NoseTestRail(Plugin):
             ):
                 time_after = datetime.now()
                 delta = time_after - self.time_before
-                self.result['elapsed'] = elapsed_time(delta.seconds)
+                self.result['elapsed'] = self.elapsed_time(delta.seconds)
                 self.time_before = time_after
                 self.send_result(self.result)
 
@@ -168,6 +142,27 @@ class NoseTestRail(Plugin):
         except AttributeError:
             test_case_id = None
         return test_case_id
+
+    # TODO: Also check accuracy
+    def elapsed_time(seconds, separator=' '):
+        suffixes = ['y', 'w', 'd', 'h', 'm', 's']
+        time = []
+        parts = [
+            (suffixes[0], 60 * 60 * 24 * 7 * 52),
+            (suffixes[1], 60 * 60 * 24 * 7),
+            (suffixes[2], 60 * 60 * 24),
+            (suffixes[3], 60 * 60),
+            (suffixes[4], 60),
+            (suffixes[5], 1)
+        ]
+        for suffix, length in parts:
+            value = seconds / length
+            if value > 0:
+                seconds = seconds % length
+                time.append('%s%s' % (str(value), suffix))
+            if seconds < 1:
+                break
+        return ' ' . join(time)
 
 
 class APIError(Exception):
