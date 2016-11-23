@@ -52,17 +52,14 @@ class NoseTestRail(Plugin):
         self.result = {}
 
     def stopTest(self, test):
-
         test_class = test.id().split('.')[-2]
         test_name = test.id().split('.')[-1]
         test_method = getattr(test.test, test_name)
 
-        test_case_id = getattr(test_method, CASE_ID)
-
-        if test_case_id:
+        if self.test_case_id:
             if self.testrail['mapping_file']:
                 with io.open(self.testrail['mapping_file'], 'ab') as f:
-                    f.write('%s:%s,%d' % (test_class, test_name, test_case_id) + "\n")
+                    f.write('%s:%s,%d' % (test_class, test_name, self.test_case_id) + "\n")
 
             # Check for TestRail API Requirements before going further
             if (
@@ -136,11 +133,8 @@ class NoseTestRail(Plugin):
 
     def get_test_case_id(self, test):
         test_name = test.id().split('.')[-1]
-        test_method = getattr(test.test, test_name)
-        try:
-            test_case_id = getattr(test_method, CASE_ID)
-        except AttributeError:
-            test_case_id = None
+        test_method = getattr(test.test, test_name, None)
+        test_case_id = getattr(test_method, CASE_ID, None)
         return test_case_id
 
     # TODO: Also check accuracy
