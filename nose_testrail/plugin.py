@@ -13,7 +13,6 @@ CASE_ID = 'case_id'
 
 
 def case_id(id):
-    """Decorator that adds test case id to a test"""
     def wrap_ob(ob):
         setattr(ob, CASE_ID, id)
         return ob
@@ -21,7 +20,6 @@ def case_id(id):
 
 
 def testrail_case_id(id):
-    """A more clearly named decorator. Same as case_id"""
     return case_id(id)
 
 
