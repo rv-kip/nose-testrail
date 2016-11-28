@@ -12,14 +12,14 @@ from nose.plugins import Plugin
 CASE_ID = 'case_id'
 
 
-def case_id(id):
+def case_id(id=None):
     def wrap_ob(ob):
         setattr(ob, CASE_ID, id)
         return ob
     return wrap_ob
 
 
-def testrail_case_id(id):
+def testrail_case_id(id=None):
     def wrap_ob(ob):
         setattr(ob, CASE_ID, id)
         return ob
