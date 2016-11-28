@@ -20,7 +20,10 @@ def case_id(id):
 
 
 def testrail_case_id(id):
-    return case_id(id)
+    def wrap_ob(ob):
+        setattr(ob, CASE_ID, id)
+        return ob
+    return wrap_ob
 
 
 class NoseTestRail(Plugin):
