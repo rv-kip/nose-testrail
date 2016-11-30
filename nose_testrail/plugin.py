@@ -42,7 +42,7 @@ class NoseTestRail(Plugin):
             self.testrail['user'] = os.environ.get('TESTRAIL_USERNAME', None)
             self.testrail['password'] = os.environ.get('TESTRAIL_PASSWORD', None)
             self.testrail['run_id'] = os.environ.get('TESTRAIL_RUN_ID', None)
-            self.testrail['mapping_file'] = os.environ.get('TESTRAIL_MAPPING_FILE', None)
+            self.testrail['mapping_file'] = os.environ.get('TESTRAIL_MAPPING_FILE', 'testrail_mapping.csv')
             self.testrail['mapping_only'] = os.environ.get('TESTRAIL_MAPPING_ONLY', None)
 
     def begin(self):
